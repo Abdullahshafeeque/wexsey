@@ -214,6 +214,14 @@ footer {
 }
 footer a { color: var(--purple); text-decoration: none; }
 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
 @media (max-width: 600px) {
   .options-grid.two-col { grid-template-columns: 1fr; }
   .form-hero { padding: 2rem 5%; }
@@ -651,28 +659,52 @@ footer a { color: var(--purple); text-decoration: none; }
   function validateStep(step) {
     const card = document.getElementById(`step${step}`);
     let valid = true;
+    let firstError = null;
+    const seenRadios = new Set();
+
     card.querySelectorAll('[required]').forEach(field => {
-      const err = field.closest('.field')?.querySelector('.field-error');
+      const fieldWrap = field.closest('.field');
+      const err = fieldWrap?.querySelector('.field-error');
+
       if (field.type === 'radio') {
-        const name = field.name;
-        const checked = card.querySelector(`input[name="${name}"]:checked`);
+        if (seenRadios.has(field.name)) return;
+        seenRadios.add(field.name);
+        const checked = card.querySelector(`input[name="${field.name}"]:checked`);
         if (!checked) {
           valid = false;
-          if (err) { err.classList.add('show'); }
+          if (err) err.classList.add('show');
+          // highlight all options in group
+          card.querySelectorAll(`input[name="${field.name}"]`).forEach(r => {
+            r.closest('.option-item').style.borderColor = '#DC2626';
+          });
+          if (!firstError && fieldWrap) firstError = fieldWrap;
         } else {
           if (err) err.classList.remove('show');
+          card.querySelectorAll(`input[name="${field.name}"]`).forEach(r => {
+            r.closest('.option-item').style.borderColor = '';
+          });
         }
       } else {
         if (!field.value.trim()) {
           valid = false;
           field.classList.add('error');
           if (err) err.classList.add('show');
+          if (!firstError && fieldWrap) firstError = fieldWrap;
         } else {
           field.classList.remove('error');
           if (err) err.classList.remove('show');
         }
       }
     });
+
+    if (!valid && firstError) {
+      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // shake the first error field
+      firstError.style.animation = 'none';
+      firstError.offsetHeight;
+      firstError.style.animation = 'shake 0.4s ease';
+    }
+
     return valid;
   }
 
