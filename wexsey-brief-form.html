@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wexsey — Website Brief Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --pink: #E800B0; --teal: #00C9A7; --purple: #7C3AED;
+  --grad: linear-gradient(135deg, #E800B0 0%, #7C3AED 50%, #00C9A7 100%);
+  --bg: #F7F6FD; --card: #FFFFFF;
+  --text: #0F0C1D; --muted: #4B4669;
+  --border: #D0CCEB; --border-focus: #7C3AED;
+  --error: #DC2626;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; padding-bottom: 4rem;
+}
+
+/* ── HEADER ── */
+header {
+  background: white; border-bottom: 1.5px solid var(--border);
+  padding: 0 6%; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 10;
+}
+.logo {
+  font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em;
+  background: var(--grad); -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header-tag {
+  font-size: 0.78rem; font-weight: 600; color: var(--muted);
+  background: var(--bg); border: 1.5px solid var(--border);
+  padding: 0.3rem 0.9rem; border-radius: 99px;
+}
+
+/* ── HERO STRIP ── */
+.form-hero {
+  background: var(--grad); padding: 2.5rem 6%;
+  text-align: center; color: white;
+}
+.form-hero h1 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem;
+}
+.form-hero p { font-size: 0.92rem; opacity: 0.88; max-width: 520px; margin: 0 auto; }
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  background: white; border-bottom: 1.5px solid var(--border);
+  padding: 1rem 6%; display: flex; align-items: center;
+  gap: 0.4rem; overflow-x: auto;
+}
+.prog-step {
+  display: flex; align-items: center; gap: 0.4rem;
+  white-space: nowrap; cursor: pointer;
+}
+.prog-dot {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: var(--muted);
+  transition: all 0.3s; flex-shrink: 0;
+}
+.prog-dot.active {
+  background: var(--grad); border-color: transparent; color: white;
+}
+.prog-dot.done {
+  background: var(--teal); border-color: transparent; color: white;
+}
+.prog-label { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+.prog-label.active { color: var(--purple); }
+.prog-line { flex: 1; min-width: 16px; height: 1.5px; background: var(--border); }
+
+/* ── FORM LAYOUT ── */
+.form-outer { max-width: 680px; margin: 2.5rem auto; padding: 0 5%; }
+
+.section-card {
+  background: var(--card); border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 2rem 2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: none;
+}
+.section-card.active { display: block; }
+
+.section-header { margin-bottom: 1.8rem; }
+.section-num {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; margin-bottom: 0.4rem;
+  background: var(--grad); -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; background-clip: text;
+}
+.section-title { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 0.3rem; }
+.section-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+/* ── FIELDS ── */
+.field { margin-bottom: 1.4rem; }
+.field label {
+  display: block; font-size: 0.85rem; font-weight: 600;
+  color: var(--text); margin-bottom: 0.45rem;
+}
+.field label .req { color: var(--pink); margin-left: 2px; }
+.field .hint { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.45rem; }
+
+input[type="text"], input[type="email"], input[type="tel"],
+input[type="url"], textarea, select {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.88rem; color: var(--text);
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  appearance: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+}
+input.error, textarea.error, select.error {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
+}
+.field-error { font-size: 0.75rem; color: var(--error); margin-top: 0.35rem; display: none; }
+.field-error.show { display: block; }
+
+textarea { resize: vertical; min-height: 90px; }
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234B4669' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+
+/* Radio & Checkbox */
+.options-grid { display: grid; gap: 0.5rem; }
+.options-grid.two-col { grid-template-columns: 1fr 1fr; }
+.option-item {
+  display: flex; align-items: flex-start; gap: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  font-size: 0.85rem; color: var(--text);
+}
+.option-item:hover { border-color: var(--border-focus); background: #f5f3ff; }
+.option-item input[type="radio"],
+.option-item input[type="checkbox"] {
+  width: 16px; height: 16px; min-width: 16px;
+  accent-color: var(--purple);
+  margin-top: 1px; cursor: pointer;
+  padding: 0; border: none; box-shadow: none;
+}
+.option-item input:focus { box-shadow: none; border-color: transparent; }
+.option-item.selected { border-color: var(--purple); background: #f5f3ff; }
+
+.char-count { font-size: 0.72rem; color: var(--muted); text-align: right; margin-top: 0.3rem; }
+
+/* ── NAV BUTTONS ── */
+.form-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 2rem; padding-top: 1.5rem;
+  border-top: 1.5px solid var(--border);
+}
+.btn-prev {
+  background: white; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 0.8rem 1.6rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.88rem; font-weight: 600; color: var(--muted);
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-prev:hover { border-color: var(--purple); color: var(--purple); }
+.btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-next {
+  background: var(--grad); border: none;
+  border-radius: 10px; padding: 0.8rem 2rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.88rem; font-weight: 700; color: white;
+  cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 4px 16px rgba(124,58,237,0.25);
+}
+.btn-next:hover { opacity: 0.88; transform: translateY(-1px); }
+.step-indicator { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+
+/* ── SUCCESS ── */
+.success-screen {
+  display: none; text-align: center;
+  background: var(--card); border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 4rem 2rem;
+}
+.success-screen.show { display: block; }
+.success-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--grad); margin: 0 auto 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+}
+.success-screen h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.8rem; }
+.success-screen p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 420px; margin: 0 auto 1.5rem; }
+.success-wa {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: #25D366; color: white; text-decoration: none;
+  padding: 0.8rem 1.8rem; border-radius: 10px;
+  font-weight: 700; font-size: 0.88rem;
+  box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center; margin-top: 2.5rem;
+  font-size: 0.75rem; color: var(--muted);
+}
+footer a { color: var(--purple); text-decoration: none; }
+
+@media (max-width: 600px) {
+  .options-grid.two-col { grid-template-columns: 1fr; }
+  .form-hero { padding: 2rem 5%; }
+  .form-outer { padding: 0 4%; }
+  .section-card { padding: 1.5rem 1.2rem; }
+  .progress-wrap { gap: 0.2rem; padding: 0.8rem 4%; }
+  .prog-label { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Wexsey</div>
+  <div class="header-tag">Client Brief Form</div>
+</header>
+
+<div class="form-hero">
+  <h1>Tell us about your business 📋</h1>
+  <p>Fill this out after paying your advance. The more detail you give, the better your website will be. Takes about 10 minutes.</p>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap" id="progressBar">
+  <div class="prog-step" onclick="goToStep(0)">
+    <div class="prog-dot active" id="dot0">1</div>
+    <span class="prog-label active" id="lbl0">Business</span>
+  </div>
+  <div class="prog-line"></div>
+  <div class="prog-step" onclick="goToStep(1)">
+    <div class="prog-dot" id="dot1">2</div>
+    <span class="prog-label" id="lbl1">Online</span>
+  </div>
+  <div class="prog-line"></div>
+  <div class="prog-step" onclick="goToStep(2)">
+    <div class="prog-dot" id="dot2">3</div>
+    <span class="prog-label" id="lbl2">Design</span>
+  </div>
+  <div class="prog-line"></div>
+  <div class="prog-step" onclick="goToStep(3)">
+    <div class="prog-dot" id="dot3">4</div>
+    <span class="prog-label" id="lbl3">Services</span>
+  </div>
+  <div class="prog-line"></div>
+  <div class="prog-step" onclick="goToStep(4)">
+    <div class="prog-dot" id="dot4">5</div>
+    <span class="prog-label" id="lbl4">Photos</span>
+  </div>
+</div>
+
+<div class="form-outer">
+  <form id="briefForm" action="https://formspree.io/f/mlgyljeo" method="POST">
+
+    <!-- ── STEP 1: BUSINESS INFO ── -->
+    <div class="section-card active" id="step0">
+      <div class="section-header">
+        <p class="section-num">Section 1 of 5</p>
+        <h2 class="section-title">Basic Business Info</h2>
+        <p class="section-desc">Let's start with the fundamentals. This information will appear on your website.</p>
+      </div>
+
+      <div class="field">
+        <label>Business Name <span class="req">*</span></label>
+        <input type="text" name="business_name" placeholder="e.g. Bloom Beauty Studio" required>
+        <div class="field-error">Please enter your business name</div>
+      </div>
+
+      <div class="field">
+        <label>Your Name <span class="req">*</span></label>
+        <input type="text" name="owner_name" placeholder="Your full name" required>
+        <div class="field-error">Please enter your name</div>
+      </div>
+
+      <div class="field">
+        <label>Your WhatsApp Number <span class="req">*</span></label>
+        <input type="tel" name="whatsapp" placeholder="+91 98765 43210" required>
+        <div class="field-error">Please enter your WhatsApp number</div>
+      </div>
+
+      <div class="field">
+        <label>Business Type <span class="req">*</span></label>
+        <select name="business_type" required>
+          <option value="" disabled selected>Select your business type</option>
+          <option>Restaurant / Hotel / Cafe</option>
+          <option>Salon / Beauty Parlour / Spa</option>
+          <option>Homestay / Guesthouse</option>
+          <option>Clinic / Doctor / Physiotherapy</option>
+          <option>Coaching Centre / Tutor</option>
+          <option>Boutique / Clothing Shop</option>
+          <option>Catering Service</option>
+          <option>Other</option>
+        </select>
+        <div class="field-error">Please select your business type</div>
+      </div>
+
+      <div class="field">
+        <label>Business Location <span class="req">*</span></label>
+        <div class="hint">Town and district, e.g. "Kalpetta, Wayanad"</div>
+        <input type="text" name="location" placeholder="e.g. Kalpetta, Wayanad" required>
+        <div class="field-error">Please enter your location</div>
+      </div>
+
+      <div class="field">
+        <label>Full Address for Website <span class="req">*</span></label>
+        <div class="hint">This goes on your Contact page and Google Maps pin</div>
+        <textarea name="full_address" placeholder="Door no., Street, Area, City, PIN code" required></textarea>
+        <div class="field-error">Please enter your full address</div>
+      </div>
+
+      <div class="field">
+        <label>Phone Number to show on website <span class="req">*</span></label>
+        <div class="hint">Can be the same as your WhatsApp number</div>
+        <input type="tel" name="phone_website" placeholder="+91 98765 43210" required>
+        <div class="field-error">Please enter a phone number</div>
+      </div>
+
+      <div class="field">
+        <label>Email Address to show on website</label>
+        <div class="hint">Optional — leave blank if you don't want email shown</div>
+        <input type="email" name="email_website" placeholder="yourbusiness@gmail.com">
+      </div>
+
+      <div class="form-nav">
+        <button type="button" class="btn-prev" disabled>← Back</button>
+        <span class="step-indicator">Step 1 of 5</span>
+        <button type="button" class="btn-next" onclick="nextStep(0)">Next →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: ONLINE PRESENCE ── -->
+    <div class="section-card" id="step1">
+      <div class="section-header">
+        <p class="section-num">Section 2 of 5</p>
+        <h2 class="section-title">Your Online Presence</h2>
+        <p class="section-desc">Tell us about your existing online presence and what domain you'd like.</p>
+      </div>
+
+      <div class="field">
+        <label>Instagram Page Link</label>
+        <div class="hint">Paste your Instagram URL if you have one</div>
+        <input type="url" name="instagram" placeholder="https://instagram.com/yourbusiness">
+      </div>
+
+      <div class="field">
+        <label>Do you already have a domain name? <span class="req">*</span></label>
+        <div class="options-grid" id="domain_status">
+          <label class="option-item">
+            <input type="radio" name="domain_status" value="no_please_register" required>
+            No — please register one for me
+          </label>
+          <label class="option-item">
+            <input type="radio" name="domain_status" value="yes_i_have_one">
+            Yes — I already have one
+          </label>
+        </div>
+        <div class="field-error">Please select an option</div>
+      </div>
+
+      <div class="field">
+        <label>Preferred domain name</label>
+        <div class="hint">e.g. "bloombeautystudio.in" — we'll check if it's available. Give 2–3 options in order of preference.</div>
+        <textarea name="domain_preference" placeholder="1. bloombeautystudio.in&#10;2. bloombeauty.in&#10;3. bloomstudiokozhikode.in" style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Any other websites or social pages?</label>
+        <div class="hint">Facebook, YouTube, Zomato, Practo, etc. — we can link to them</div>
+        <textarea name="other_links" placeholder="Paste any links here" style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="form-nav">
+        <button type="button" class="btn-prev" onclick="prevStep(1)">← Back</button>
+        <span class="step-indicator">Step 2 of 5</span>
+        <button type="button" class="btn-next" onclick="nextStep(1)">Next →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: DESIGN ── -->
+    <div class="section-card" id="step2">
+      <div class="section-header">
+        <p class="section-num">Section 3 of 5</p>
+        <h2 class="section-title">Design Preferences</h2>
+        <p class="section-desc">Help us understand the look and feel you want. Don't overthink this — even rough ideas help.</p>
+      </div>
+
+      <div class="field">
+        <label>Describe your business in 2–3 sentences <span class="req">*</span></label>
+        <div class="hint">This becomes your About page introduction</div>
+        <textarea name="business_description" id="bizDesc" placeholder="e.g. Bloom Beauty Studio is a women's salon in Kozhikode offering haircare, skincare, and bridal services. We've been serving clients since 2019 with a focus on quality and comfort." required maxlength="400"></textarea>
+        <div class="char-count"><span id="descCount">0</span>/400</div>
+        <div class="field-error">Please describe your business</div>
+      </div>
+
+      <div class="field">
+        <label>Tagline for your business</label>
+        <div class="hint">A short line that captures what you do — e.g. "Look good. Feel amazing. Every day."</div>
+        <input type="text" name="tagline" placeholder="Your business tagline (optional)">
+      </div>
+
+      <div class="field">
+        <label>Colour preferences for your website</label>
+        <div class="hint">Name colours, or describe a vibe — e.g. "pink and white, feminine", "green and earthy, natural", "blue and professional"</div>
+        <input type="text" name="color_preference" placeholder="e.g. Rose pink and white, clean and modern">
+      </div>
+
+      <div class="field">
+        <label>Website style you prefer <span class="req">*</span></label>
+        <div class="options-grid two-col">
+          <label class="option-item">
+            <input type="radio" name="style" value="clean_minimal" required>
+            Clean & Minimal
+          </label>
+          <label class="option-item">
+            <input type="radio" name="style" value="warm_traditional">
+            Warm & Traditional
+          </label>
+          <label class="option-item">
+            <input type="radio" name="style" value="bold_modern">
+            Bold & Modern
+          </label>
+          <label class="option-item">
+            <input type="radio" name="style" value="elegant_premium">
+            Elegant & Premium
+          </label>
+        </div>
+        <div class="field-error">Please pick a style</div>
+      </div>
+
+      <div class="field">
+        <label>Reference websites you like</label>
+        <div class="hint">Paste links to any websites (not just local) whose design you like</div>
+        <textarea name="reference_sites" placeholder="Paste links here, one per line" style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Do you have a logo? <span class="req">*</span></label>
+        <div class="options-grid">
+          <label class="option-item">
+            <input type="radio" name="has_logo" value="yes_will_send" required>
+            Yes — I'll send it on WhatsApp or Drive
+          </label>
+          <label class="option-item">
+            <input type="radio" name="has_logo" value="no_text_branding">
+            No — please use text-based branding
+          </label>
+        </div>
+        <div class="field-error">Please select an option</div>
+      </div>
+
+      <div class="form-nav">
+        <button type="button" class="btn-prev" onclick="prevStep(2)">← Back</button>
+        <span class="step-indicator">Step 3 of 5</span>
+        <button type="button" class="btn-next" onclick="nextStep(2)">Next →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4: SERVICES ── -->
+    <div class="section-card" id="step3">
+      <div class="section-header">
+        <p class="section-num">Section 4 of 5</p>
+        <h2 class="section-title">Your Services / Menu / Offerings</h2>
+        <p class="section-desc">This becomes the main Services page of your website. Be as specific as you can.</p>
+      </div>
+
+      <div class="field">
+        <label>List your main services, menu items, or packages <span class="req">*</span></label>
+        <div class="hint">One per line. Include prices if you want them on the website.</div>
+        <textarea name="services_list" id="servicesList" placeholder="e.g.&#10;Haircut & Style — Rs.300&#10;Keratin Treatment — Rs.2,500&#10;Bridal Makeup Package — Rs.8,000&#10;Facial & Cleanup — Rs.600&#10;Manicure & Pedicure — Rs.500" required style="min-height:140px;" maxlength="800"></textarea>
+        <div class="char-count"><span id="servCount">0</span>/800</div>
+        <div class="field-error">Please list your services</div>
+      </div>
+
+      <div class="field">
+        <label>Should prices be shown on the website? <span class="req">*</span></label>
+        <div class="options-grid">
+          <label class="option-item">
+            <input type="radio" name="show_prices" value="yes" required>
+            Yes — show all prices
+          </label>
+          <label class="option-item">
+            <input type="radio" name="show_prices" value="no">
+            No — don't show prices
+          </label>
+          <label class="option-item">
+            <input type="radio" name="show_prices" value="some">
+            Some items only (I'll mention which)
+          </label>
+        </div>
+        <div class="field-error">Please select an option</div>
+      </div>
+
+      <div class="field">
+        <label>Business hours <span class="req">*</span></label>
+        <div class="hint">e.g. "Monday–Saturday 9am–8pm, Sunday closed"</div>
+        <input type="text" name="business_hours" placeholder="e.g. Mon–Sat 9am–8pm, Sunday closed" required>
+        <div class="field-error">Please enter your business hours</div>
+      </div>
+
+      <div class="field">
+        <label>Special offers or things worth highlighting?</label>
+        <div class="hint">e.g. "Free demo class", "Home delivery available", "10% off for first-time customers"</div>
+        <textarea name="highlights" placeholder="Any special offers, unique features, or things that set you apart" style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="form-nav">
+        <button type="button" class="btn-prev" onclick="prevStep(3)">← Back</button>
+        <span class="step-indicator">Step 4 of 5</span>
+        <button type="button" class="btn-next" onclick="nextStep(3)">Next →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 5: PHOTOS & FINAL ── -->
+    <div class="section-card" id="step4">
+      <div class="section-header">
+        <p class="section-num">Section 5 of 5</p>
+        <h2 class="section-title">Photos & Final Details</h2>
+        <p class="section-desc">Almost done! Just a few last things.</p>
+      </div>
+
+      <div class="field">
+        <label>How will you send us your photos? <span class="req">*</span></label>
+        <div class="options-grid">
+          <label class="option-item">
+            <input type="radio" name="photo_method" value="whatsapp" required>
+            WhatsApp
+          </label>
+          <label class="option-item">
+            <input type="radio" name="photo_method" value="google_drive">
+            Google Drive link
+          </label>
+          <label class="option-item">
+            <input type="radio" name="photo_method" value="email">
+            Email
+          </label>
+          <label class="option-item">
+            <input type="radio" name="photo_method" value="no_photos">
+            I don't have photos — please use stock images
+          </label>
+        </div>
+        <div class="field-error">Please select a method</div>
+      </div>
+
+      <div class="field">
+        <label>How many photos do you have approximately?</label>
+        <div class="options-grid two-col">
+          <label class="option-item">
+            <input type="radio" name="photo_count" value="less_than_5">
+            Less than 5
+          </label>
+          <label class="option-item">
+            <input type="radio" name="photo_count" value="5_to_15">
+            5–15 photos
+          </label>
+          <label class="option-item">
+            <input type="radio" name="photo_count" value="15_plus">
+            More than 15
+          </label>
+          <label class="option-item">
+            <input type="radio" name="photo_count" value="none">
+            None
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Google Drive link for photos / logo</label>
+        <div class="hint">If you're sharing via Drive, paste the link here (make sure it's set to "Anyone with link can view")</div>
+        <input type="url" name="drive_link" placeholder="https://drive.google.com/...">
+      </div>
+
+      <div class="field">
+        <label>Any specific pages or sections you want beyond the standard 5?</label>
+        <div class="hint">Standard: Home, About, Services, Gallery, Contact. Anything extra is charged at Rs.1,500/page.</div>
+        <textarea name="extra_pages" placeholder="e.g. Testimonials page, Menu PDF download, Online booking form, Team page" style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Anything else you want us to know?</label>
+        <textarea name="anything_else" placeholder="Any special requests, things to avoid, or other details that would help us build the perfect website for you" style="min-height:90px;"></textarea>
+      </div>
+
+      <!-- HIDDEN FIELDS -->
+      <input type="hidden" name="_subject" value="New Wexsey Client Brief Received!">
+      <input type="hidden" name="_next" value="">
+
+      <div class="form-nav">
+        <button type="button" class="btn-prev" onclick="prevStep(4)">← Back</button>
+        <span class="step-indicator">Step 5 of 5</span>
+        <button type="submit" class="btn-next" id="submitBtn">Submit Brief ✓</button>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS ── -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✓</div>
+      <h2>Brief received! 🎉</h2>
+      <p>Thank you! We've got everything we need to start building your website. We'll send you a preview link within 5 working days. If you have any questions in the meantime, just WhatsApp us.</p>
+      <a href="https://wa.me/919876543210" class="success-wa">💬 WhatsApp Wexsey</a>
+    </div>
+
+  </form>
+
+  <footer>
+    <p>Built by <a href="#">Wexsey</a> · Kerala's small business web studio · <a href="https://wa.me/919876543210">+91 98765 43210</a></p>
+  </footer>
+</div>
+
+<script>
+  let currentStep = 0;
+  const totalSteps = 5;
+
+  function updateProgress(step) {
+    for (let i = 0; i < totalSteps; i++) {
+      const dot = document.getElementById(`dot${i}`);
+      const lbl = document.getElementById(`lbl${i}`);
+      dot.classList.remove('active', 'done');
+      lbl.classList.remove('active');
+      if (i < step) { dot.classList.add('done'); dot.textContent = '✓'; }
+      else if (i === step) { dot.classList.add('active'); dot.textContent = i + 1; lbl.classList.add('active'); }
+      else { dot.textContent = i + 1; }
+    }
+  }
+
+  function showStep(step) {
+    document.querySelectorAll('.section-card').forEach(s => s.classList.remove('active'));
+    document.getElementById(`step${step}`).classList.add('active');
+    updateProgress(step);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goToStep(step) {
+    if (step <= currentStep) { currentStep = step; showStep(step); }
+  }
+
+  function validateStep(step) {
+    const card = document.getElementById(`step${step}`);
+    let valid = true;
+    card.querySelectorAll('[required]').forEach(field => {
+      const err = field.closest('.field')?.querySelector('.field-error');
+      if (field.type === 'radio') {
+        const name = field.name;
+        const checked = card.querySelector(`input[name="${name}"]:checked`);
+        if (!checked) {
+          valid = false;
+          if (err) { err.classList.add('show'); }
+        } else {
+          if (err) err.classList.remove('show');
+        }
+      } else {
+        if (!field.value.trim()) {
+          valid = false;
+          field.classList.add('error');
+          if (err) err.classList.add('show');
+        } else {
+          field.classList.remove('error');
+          if (err) err.classList.remove('show');
+        }
+      }
+    });
+    return valid;
+  }
+
+  function nextStep(step) {
+    if (!validateStep(step)) return;
+    currentStep = step + 1;
+    showStep(currentStep);
+  }
+
+  function prevStep(step) {
+    currentStep = step - 1;
+    showStep(currentStep);
+  }
+
+  // Option item selection highlight
+  document.querySelectorAll('.option-item input').forEach(input => {
+    input.addEventListener('change', () => {
+      const name = input.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(i => {
+        i.closest('.option-item').classList.remove('selected');
+      });
+      input.closest('.option-item').classList.add('selected');
+    });
+  });
+
+  // Char counters
+  const bizDesc = document.getElementById('bizDesc');
+  if (bizDesc) bizDesc.addEventListener('input', () => {
+    document.getElementById('descCount').textContent = bizDesc.value.length;
+  });
+  const servList = document.getElementById('servicesList');
+  if (servList) servList.addEventListener('input', () => {
+    document.getElementById('servCount').textContent = servList.value.length;
+  });
+
+  // Form submit — AJAX to Formspree, then show success screen
+  document.getElementById('briefForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!validateStep(4)) return;
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+    try {
+      const response = await fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        document.getElementById('step4').classList.remove('active');
+        document.getElementById('successScreen').classList.add('show');
+        document.getElementById('progressBar').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        btn.textContent = 'Submit Brief ✓';
+        btn.disabled = false;
+        alert('Something went wrong. Please try again or WhatsApp us at +91 98765 43210.');
+      }
+    } catch (err) {
+      btn.textContent = 'Submit Brief ✓';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again or WhatsApp us at +91 98765 43210.');
+    }
+  });
+
+  // Clear error on input
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', () => {
+      el.classList.remove('error');
+      const err = el.closest('.field')?.querySelector('.field-error');
+      if (err) err.classList.remove('show');
+    });
+  });
+</script>
+</body>
+</html>
