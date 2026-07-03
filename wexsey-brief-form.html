@@ -10,8 +10,8 @@
 :root {
   --pink: #E800B0; --teal: #00C9A7; --purple: #7C3AED;
   --grad: linear-gradient(135deg, #E800B0 0%, #7C3AED 50%, #00C9A7 100%);
-  --bg: #F7F6FD; --card: #fafafa;
-  --text: #0F0C1D; --muted: #4c466b;
+  --bg: #F7F6FD; --card: #FFFFFF;
+  --text: #0F0C1D; --muted: #4B4669;
   --border: #D0CCEB; --border-focus: #7C3AED;
   --error: #DC2626;
 }
@@ -22,7 +22,6 @@ body {
   min-height: 100vh; padding-bottom: 4rem;
 }
 
-
 /* ── HEADER ── */
 header {
   background: white; border-bottom: 1.5px solid var(--border);
@@ -30,16 +29,17 @@ header {
   display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0; z-index: 10;
 }
-.logo {
-  font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em;
-  background: var(--grad); -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; background-clip: text;
+.logo img {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 .header-tag {
   font-size: 0.78rem; font-weight: 600; color: var(--muted);
   background: var(--bg); border: 1.5px solid var(--border);
   padding: 0.3rem 0.9rem; border-radius: 99px;
 }
+
 
 /* ── HERO STRIP ── */
 .form-hero {
@@ -215,14 +215,6 @@ footer {
 }
 footer a { color: var(--purple); text-decoration: none; }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(4px); }
-}
-
 @media (max-width: 600px) {
   .options-grid.two-col { grid-template-columns: 1fr; }
   .form-hero { padding: 2rem 5%; }
@@ -236,7 +228,9 @@ footer a { color: var(--purple); text-decoration: none; }
 <body>
 
 <header>
-  <div class="logo">Wexsey</div>
+  <div class="logo">
+    <img src="Wexsey.png" alt="Wexsey Logo">
+  </div>
   <div class="header-tag">Client Brief Form</div>
 </header>
 
@@ -304,18 +298,44 @@ footer a { color: var(--purple); text-decoration: none; }
 
       <div class="field">
         <label>Business Type <span class="req">*</span></label>
-        <select name="business_type" required>
+        <select name="business_type" id="businessType" required onchange="toggleOtherBusiness(this.value)">
           <option value="" disabled selected>Select your business type</option>
-          <option>Restaurant / Hotel / Cafe</option>
-          <option>Salon / Beauty Parlour / Spa</option>
-          <option>Homestay / Guesthouse</option>
-          <option>Clinic / Doctor / Physiotherapy</option>
-          <option>Coaching Centre / Tutor</option>
+          <option>Accounting / Financial Services</option>
+          <option>Architecture / Interior Design</option>
+          <option>Automotive / Mechanic</option>
+          <option>Bakery / Dessert Shop</option>
           <option>Boutique / Clothing Shop</option>
           <option>Catering Service</option>
-          <option>Other</option>
+          <option>Clinic / Doctor / Physiotherapy</option>
+          <option>Coaching Centre / Tutor</option>
+          <option>Construction / Contracting</option>
+          <option>Consulting / Agency</option>
+          <option>E-commerce / Online Store</option>
+          <option>Event Planning / Photography</option>
+          <option>Fitness Center / Gym / Yoga</option>
+          <option>Freelancer / Independent Contractor</option>
+          <option>Homestay / Guesthouse</option>
+          <option>IT / Tech Services</option>
+          <option>Jewelry / Accessories</option>
+          <option>Law / Legal Services</option>
+          <option>Logistics / Courier / Moving</option>
+          <option>Manufacturing / Factory</option>
+          <option>Non-Profit / NGO</option>
+          <option>Pharmacy / Medical Store</option>
+          <option>Real Estate / Property Management</option>
+          <option>Restaurant / Hotel / Cafe</option>
+          <option>Salon / Beauty Parlour / Spa</option>
+          <option>Supermarket / Grocery / Retail</option>
+          <option>Travel Agency / Tour Operator</option>
+          <option value="Other">Other</option>
         </select>
         <div class="field-error">Please select your business type</div>
+      </div>
+
+      <div class="field" id="otherBusinessField" style="display: none;">
+        <label>Specify Your Business Type <span class="req">*</span></label>
+        <input type="text" name="other_business_type" id="otherBusinessInput" placeholder="e.g. Flour Mill">
+        <div class="field-error">Please specify your business type</div>
       </div>
 
       <div class="field">
@@ -660,52 +680,28 @@ footer a { color: var(--purple); text-decoration: none; }
   function validateStep(step) {
     const card = document.getElementById(`step${step}`);
     let valid = true;
-    let firstError = null;
-    const seenRadios = new Set();
-
     card.querySelectorAll('[required]').forEach(field => {
-      const fieldWrap = field.closest('.field');
-      const err = fieldWrap?.querySelector('.field-error');
-
+      const err = field.closest('.field')?.querySelector('.field-error');
       if (field.type === 'radio') {
-        if (seenRadios.has(field.name)) return;
-        seenRadios.add(field.name);
-        const checked = card.querySelector(`input[name="${field.name}"]:checked`);
+        const name = field.name;
+        const checked = card.querySelector(`input[name="${name}"]:checked`);
         if (!checked) {
           valid = false;
-          if (err) err.classList.add('show');
-          // highlight all options in group
-          card.querySelectorAll(`input[name="${field.name}"]`).forEach(r => {
-            r.closest('.option-item').style.borderColor = '#DC2626';
-          });
-          if (!firstError && fieldWrap) firstError = fieldWrap;
+          if (err) { err.classList.add('show'); }
         } else {
           if (err) err.classList.remove('show');
-          card.querySelectorAll(`input[name="${field.name}"]`).forEach(r => {
-            r.closest('.option-item').style.borderColor = '';
-          });
         }
       } else {
         if (!field.value.trim()) {
           valid = false;
           field.classList.add('error');
           if (err) err.classList.add('show');
-          if (!firstError && fieldWrap) firstError = fieldWrap;
         } else {
           field.classList.remove('error');
           if (err) err.classList.remove('show');
         }
       }
     });
-
-    if (!valid && firstError) {
-      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // shake the first error field
-      firstError.style.animation = 'none';
-      firstError.offsetHeight;
-      firstError.style.animation = 'shake 0.4s ease';
-    }
-
     return valid;
   }
 
@@ -779,6 +775,23 @@ footer a { color: var(--purple); text-decoration: none; }
       if (err) err.classList.remove('show');
     });
   });
+  function toggleOtherBusiness(value) {
+    const otherField = document.getElementById('otherBusinessField');
+    const otherInput = document.getElementById('otherBusinessInput');
+    
+    if (value === 'Other') {
+      otherField.style.display = 'block';
+      otherInput.setAttribute('required', 'true');
+    } else {
+      otherField.style.display = 'none';
+      otherInput.removeAttribute('required');
+      otherInput.value = ''; // clear the input if they hide it
+      otherInput.classList.remove('error'); // clear validation errors
+      
+      const err = otherField.querySelector('.field-error');
+      if (err) err.classList.remove('show');
+    }
+  }
 </script>
 </body>
 </html>
