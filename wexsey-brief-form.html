@@ -29,9 +29,16 @@ header {
   display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0; z-index: 10;
 }
+.logo {
+  display: flex;
+  align-items: center;
+}
+
 .logo img {
-  height: 32px;
+  height: 42px; /* Makes the logo larger and more readable */
   width: auto;
+  max-width: 200px; /* Prevents it from taking up too much space */
+  object-fit: contain; /* Strictly enforces the original image proportions so it never squishes */
   display: block;
 }
 .header-tag {
